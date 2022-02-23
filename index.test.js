@@ -34,7 +34,7 @@ const swapiQueries = readAll([
   './fixtures/swapi7.gql'
 ])
 
-const artsyUniqueNames = getUniqueNamesFromIntrospection(artsySchema)
+const artsyUniqueNames = getUniqueNamesFromGQL(artsyQueries.join(''))
 const countriesUniqueNames = getUniqueNamesFromIntrospection(countriesSchema)
 const swapiUniqueNames = getUniqueNamesFromIntrospection(swapiSchema)
 
@@ -59,9 +59,10 @@ test('makes queries smaller', () => {
 })
 
 test('restores queries to their original state', () => {
+  const query = artsyQueries[2]
   const withoutSpaces = s => s.replace(/\s/g, '')
-  const query = artsyQueries[0]
   const aun = artsyUniqueNames
-  const restored = expandQuery(minifyQuery(query, aun), aun)
+  const minified = minifyQuery(query, aun);
+  const restored = expandQuery(minified, aun)
   expect(withoutSpaces(query)).toEqual(withoutSpaces(restored))
 })
